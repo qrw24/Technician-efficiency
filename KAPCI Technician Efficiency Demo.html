@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KAPCI Technician Efficiency Demo</title>
+<style>
+:root{--blue:#1769aa;--navy:#173b60;--line:#d8dee7;--muted:#687789;--bg:#f4f6f9}
+*{box-sizing:border-box}:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;background:var(--bg);color:#263445;font:14px "Segoe UI",Arial,sans-serif}
+.top{height:58px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px}
+.brand{font-weight:800;color:var(--navy);font-size:18px}.brand span{color:var(--blue)}.top small{color:var(--muted)}
+.wrap{max-width:1360px;margin:22px auto;padding:0 22px}.crumb{color:var(--muted);font-size:12px;margin-bottom:12px}
+.heading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:18px;flex-wrap:wrap}
+h1{font-size:22px;margin:0;color:#20364e}.subtitle{color:var(--muted);margin-top:5px;font-size:12px}
+.btn{border:1px solid #cbd5e1;background:#fff;color:#34465a;border-radius:5px;padding:8px 12px;cursor:pointer;font-size:12px}.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+.tabs{display:flex;gap:3px;border-bottom:1px solid var(--line);margin-bottom:16px}.tab{padding:11px 16px;border:0;background:transparent;color:#5c6c7d;cursor:pointer;border-bottom:3px solid transparent;font-weight:600}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:17px}.card,.box{background:#fff;border:1px solid var(--line);border-radius:7px}.card{padding:14px 16px}.card label{font-size:12px;color:var(--muted)}.card strong{display:block;font-size:25px;margin:5px 0;color:#243d58}.card small{color:var(--muted)}
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:14px 0}.filters{display:flex;gap:8px;flex-wrap:wrap}
+input,select{background:#fff;border:1px solid #cbd5e1;border-radius:5px;padding:8px 10px;color:#263445;font:13px "Segoe UI",Arial;min-height:34px}
+.section-title{font-size:15px;font-weight:700;color:#29445f}.hint{font-size:12px;color:var(--muted);margin-top:3px}
+.tech{margin:10px 0;background:#fff;border:1px solid var(--line);border-radius:7px;overflow:hidden}
+.techhead{width:100%;display:flex;align-items:center;justify-content:space-between;text-align:left;background:#fff;border:0;padding:14px 16px;cursor:pointer;color:#263445;gap:10px}.techhead:hover{background:#f8fafc}
+.avatar{width:38px;height:38px;border-radius:50%;background:#e3effa;color:var(--blue);display:inline-flex;align-items:center;justify-content:center;font-weight:700;margin-right:12px;flex:none}
+.left{display:flex;align-items:center}.techname{font-weight:700;color:#29445f}.techmeta{font-size:12px;color:var(--muted);margin-top:4px}
+.eff{display:flex;flex-direction:column;align-items:flex-end;color:var(--muted);font-size:12px;gap:6px}.track{height:6px;width:130px;background:#e8edf3;border-radius:5px;overflow:hidden}.track i{display:block;height:100%;background:#3b91c9}
+.techbody{border-top:1px solid var(--line);padding:12px 14px 15px}
+.subtabs{display:flex;gap:16px;border-bottom:1px solid var(--line);margin-bottom:10px}.subtab{border:0;background:none;padding:9px 4px;color:#667789;cursor:pointer;border-bottom:2px solid transparent;font-weight:600}.subtab.active{color:var(--blue);border-color:var(--blue)}
+table{width:100%;border-collapse:collapse;min-width:720px}th{background:#f1f4f8;color:#526477;font-size:11px;text-transform:uppercase;letter-spacing:.3px;text-align:left}th,td{padding:10px 11px;border-bottom:1px solid #e5e9ef}td{font-size:12px}tr:last-child td{border-bottom:0}.scroll{overflow:auto;border:1px solid #e0e5eb;border-radius:5px}
+.status{display:inline-block;border-radius:4px;padding:4px 8px;font-size:11px;font-weight:700;white-space:nowrap;border:1px solid transparent}
+.Queued{color:#8a6519;background:#fff7df;border-color:#f1dfa8}.In-Progress{color:#1769aa;background:#eaf4fc;border-color:#c9e1f4}.Done{color:#25754e;background:#eaf7ef;border-color:#cbe9d5}.Awaiting-Pickup{color:#7852a4;background:#f3edfa;border-color:#dfd1f0}.Delivered{color:#23764c;background:#e9f6ee;border-color:#c9e7d2}.Returned{color:#b34d35;background:#fff0eb;border-color:#f3d1c7}
+.expand{width:100%;display:flex;justify-content:space-between;align-items:center;background:#f8fafc;border:1px solid #e0e5eb;border-radius:5px;padding:10px 12px;margin:7px 0;cursor:pointer;text-align:left;color:#34465a;gap:10px}
+.nested{margin:0 0 8px 13px;padding:7px 0 5px 13px;border-left:2px solid #d8e5f0}
+.pill{font-size:11px;color:#5e6e80;background:#f1f4f8;border:1px solid #e1e6ed;border-radius:12px;padding:3px 8px;display:inline-block;margin:2px 3px 2px 0}
+.returnnote{background:#fff9ed;border:1px solid #f0dfb9;border-radius:5px;padding:11px;color:#765b28;font-size:12px;margin-bottom:12px}
+.hide{display:none!important}.empty{padding:18px;color:var(--muted);text-align:center}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+@media(max-width:750px){.cards{grid-template-columns:repeat(2,1fr)}.wrap{padding:0 12px}.top{padding:0 13px}.track{width:80px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="brand">KAPCI <span>Paint Mixing</span></div><small>Demo environment</small></header>
+<main class="wrap">
+<div class="crumb">Reports / Production / Technician Efficiency</div>
+<div class="heading"><div><h1>Technician Efficiency Report</h1><div class="subtitle">Grouped by technician. Technician and customer are tracked separately on every order. Times use a demo clock of 12:30.</div></div><button class="btn" onclick="window.print()">Print report</button></div>
+<div class="tabs"><button class="tab active" data-tab="production">By technician</button><button class="tab" data-tab="customers">Customer directory</button><button class="tab" data-tab="returns">Returned paint <span id="returnBadge" class="pill"></span></button></div>
+
+<section id="production">
+<div class="cards">
+ <div class="card"><label>Total orders</label><strong id="total">0</strong><small id="totalSub"></small></div>
+ <div class="card"><label>Delivered</label><strong id="delivered">0</strong><small>Handed over to customers</small></div>
+ <div class="card"><label>In Progress</label><strong id="progress">0</strong><small>Currently being mixed</small></div>
+ <div class="card"><label>Awaiting Pickup</label><strong id="pickup">0</strong><small>Mixed, customer pending</small></div>
+</div>
+<div class="toolbar"><div><div class="section-title">Technician breakdown</div><div class="hint">Open a technician, then expand a group to see the orders. Switch between By customer, By paint and All orders.</div></div>
+<div class="filters"><input id="search" placeholder="Search customer or color code" aria-label="Search"><select id="filterStatus" aria-label="Status"><option value="">All statuses</option><option>Queued</option><option>In Progress</option><option>Done</option><option>Awaiting Pickup</option><option>Delivered</option></select><select id="filterTech" aria-label="Technician"><option value="">All technicians</option></select></div></div>
+<div id="techList"></div>
+</section>
+
+<section id="customers" class="hide">
+<div class="toolbar"><div><div class="section-title">Customer directory</div><div class="hint">Each customer with their orders.</div></div></div>
+<div id="custList"></div>
+</section>
+
+<section id="returns" class="hide">
+<div class="section-title">Returned paint register</div><div class="hint" style="margin:5px 0 13px">Returns link to the original order and start a separate rework cycle.</div>
+<div class="returnnote"><b>Return workflow:</b> New queue slip, linked to the original order with a reason. Status becomes Returned, then assign a technician, In Progress, Done, Awaiting Pickup, Delivered.</div>
+<div class="scroll"><table><thead><tr><th>Return</th><th>Customer</th><th>Technician</th><th>Color code</th><th>Paint</th><th>Reason</th><th>Cycle</th><th>Status</th><th>Action</th></tr></thead><tbody id="returnRows"></tbody></table></div>
+</section>
+</main>
+<script>
+const orders=[
+{id:101,customer:"Kebede Auto",tech:"Nati Tola",paint:"Base Coat",color:"670-001",qty:"2.00 L",start:"08:15",status:"Delivered",mix:"08:50",at:"10:00"},
+{id:102,customer:"Hana Motors",tech:"Nati Tola",paint:"Base Coat XR",color:"670-008",qty:"1.00 L",start:"08:30",status:"Done",mix:"09:15",at:"09:15"},
+{id:103,customer:"Hana Motors",tech:"Nati Tola",paint:"Clear Coat",color:"3100-002",qty:"1.00 L",start:"09:05",status:"Awaiting Pickup",mix:"09:50",at:"09:50"},
+{id:104,customer:"Yonas Motors",tech:"Nati Tola",paint:"CRYL",color:"660-045",qty:"2.00 L",start:"09:25",status:"In Progress"},
+{id:105,customer:"Sileshi G/Hana",tech:"Sileshi Teklu",paint:"CRYL",color:"660-120",qty:"2.00 L",start:"09:40",status:"Delivered",mix:"10:25",at:"11:10"},
+{id:106,customer:"Sileshi G/Hana",tech:"Sileshi Teklu",paint:"Base Coat",color:"670-006",qty:"2.00 L",start:"10:10",status:"In Progress"},
+{id:107,customer:"Abebe Garage",tech:"Sileshi Teklu",paint:"Clear Coat",color:"3100-010",qty:"1.00 L",start:"10:35",status:"Queued"},
+{id:108,customer:"Abebe Garage",tech:"Sileshi Teklu",paint:"Base Coat",color:"670-006",qty:"1.00 L",start:"11:00",status:"Done",mix:"11:40",at:"11:40"},
+{id:109,customer:"Mekdes Auto",tech:"Dawit",paint:"CRYL",color:"660-045",qty:"1.00 L",start:"11:15",status:"Queued"},
+{id:110,customer:"Mekdes Auto",tech:"Dawit",paint:"Base Coat",color:"670-010",qty:"2.00 L",start:"11:25",status:"In Progress"},
+{id:111,customer:"Yonas Motors",tech:"Dawit",paint:"Clear Coat",color:"3100-005",qty:"1.00 L",start:"12:05",status:"Delivered",mix:"12:20",at:"12:28"},
+{id:112,customer:"Selam Auto",tech:"Unassigned",paint:"Base Coat",color:"670-001",qty:"1.00 L",start:"12:15",status:"Queued"}
+];
+const returns=[
+{id:"R-201",original:"#105",customer:"Sileshi G/Hana",color:"660-120",paint:"CRYL",reason:"Color difference",cycle:1,status:"Returned",tech:"Sileshi Teklu"},
+{id:"R-202",original:"#108",customer:"Abebe Garage",color:"670-006",paint:"Base Coat",reason:"Customer requested adjustment",cycle:1,status:"Returned",tech:"Unassigned"}
+];
+const techs=["Nati Tola","Sileshi Teklu","Dawit","Unassigned"];
+let open={};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const cls=s=>s.replaceAll(" ","-");
+const badge=s=>`<span class="status ${cls(s)}">${esc(s)}</span>`;
+const uniq=a=>[...new Set(a)];
+const initials=n=>n==="Unassigned"?"?":n.split(" ").map(w=>w[0]).join("").slice(0,2);
+const litres=l=>l.reduce((n,o)=>n+parseFloat(o.qty),0).toFixed(2);
+const NOWS="12:30",NOW=750;
+const mins=t=>{const [h,m]=t.split(":").map(Number);return h*60+m};
+const fmt=m=>m<60?`${m} min`:`${Math.floor(m/60)} h ${m%60} min`;
+function mixTime(o){if(o.mix)return fmt(mins(o.mix)-mins(o.start));if(o.status==="In Progress")return fmt(NOW-mins(o.start))+" (running)";return "—"}
+function totalTime(o){const live=["Queued","In Progress"].includes(o.status)||!o.at;return fmt((live?NOW:mins(o.at))-mins(o.start))+(live?" (so far)":"")}
+function filtered(){const q=$("search").value.toLowerCase(),st=$("filterStatus").value,t=$("filterTech").value;
+ return orders.filter(o=>(!q||(o.customer+" "+o.color+" "+o.paint).toLowerCase().includes(q))&&(!st||o.status===st)&&(!t||o.tech===t))}
+function statusEditor(o){return `<select data-status="${o.id}" aria-label="Update status">${["Queued","In Progress","Done","Awaiting Pickup","Delivered"].map(s=>`<option ${s===o.status?"selected":""}>${s}</option>`).join("")}</select>`}
+function table(list,showTech){
+ if(!list.length)return `<div class="empty">No orders match your filters.</div>`;
+ return `<div class="scroll"><table><thead><tr><th>Order</th>${showTech===null?"":showTech?"<th>Technician</th>":"<th>Customer</th>"}<th>Color code</th><th>Paint type</th><th>Qty</th><th>Start</th><th>Mix time</th><th>Total time</th><th>Status</th><th>Update</th></tr></thead><tbody>${list.map(o=>`<tr><td><b>#${o.id}</b></td>${showTech===null?"":`<td>${esc(showTech?o.tech:o.customer)}</td>`}<td>${esc(o.color)}</td><td>${esc(o.paint)}</td><td>${esc(o.qty)}</td><td>${esc(o.start)}</td><td>${mixTime(o)}</td><td>${totalTime(o)}</td><td>${badge(o.status)}</td><td>${statusEditor(o)}</td></tr>`).join("")}</tbody></table></div>`}
+function byGroup(list,key){
+ if(!list.length)return `<div class="empty">No orders match your filters.</div>`;
+ const f=open["v|"+key]==="paint"?"paint":"customer";
+ return uniq(list.map(o=>o[f])).map(c=>{const g=list.filter(o=>o[f]===c),k=key+"|"+f+"|"+c;
+  return `<button class="expand" data-open="${esc(k)}"><span><b>${esc(c)}</b> <span class="hint">${g.length} order(s) · ${litres(g)} L</span></span><span>${open[k]?"−":"+"}</span></button>${open[k]?`<div class="nested">${table(g,f==="paint"?false:null)}</div>`:""}`}).join("")}
+function render(){
+ $("total").textContent=orders.length;
+ $("totalSub").textContent=`${techs.length-1} technicians · ${uniq(orders.map(o=>o.customer)).length} customers`;
+ $("delivered").textContent=orders.filter(o=>o.status==="Delivered").length;
+ $("progress").textContent=orders.filter(o=>o.status==="In Progress").length;
+ $("pickup").textContent=orders.filter(o=>o.status==="Awaiting Pickup").length;
+ $("returnBadge").textContent=returns.length;
+ const sel=$("filterTech").value;
+ $("filterTech").innerHTML='<option value="">All technicians</option>'+techs.map(t=>`<option ${sel===t?"selected":""}>${esc(t)}</option>`).join("");
+ const list=filtered(),tsel=$("filterTech").value;
+ $("techList").innerHTML=techs.filter(t=>!tsel||t===tsel).map(t=>{
+  const mine=list.filter(o=>o.tech===t),all=orders.filter(o=>o.tech===t);
+  if(!all.length||(!mine.length&&($("search").value||$("filterStatus").value)))return "";
+  const done=all.filter(o=>o.status==="Delivered").length,pct=Math.round(done/all.length*100),custs=uniq(all.map(o=>o.customer)).length,v=open["v|"+t]||"cust";
+  return `<div class="tech"><button class="techhead" data-open="${esc(t)}"><span class="left"><span class="avatar">${esc(initials(t))}</span><span><span class="techname">${esc(t)}</span><div class="techmeta">${all.length} orders · ${custs} customer(s) · ${litres(all)} L</div></span></span><span class="eff"><span>${pct}% delivered ${open[t]?"−":"+"}</span><span class="track"><i style="width:${pct}%"></i></span></span></button>${open[t]?`<div class="techbody"><div class="subtabs"><button class="subtab ${v==="cust"?"active":""}" data-view="${esc(t)}" data-mode="cust">By customer</button><button class="subtab ${v==="paint"?"active":""}" data-view="${esc(t)}" data-mode="paint">By paint</button><button class="subtab ${v==="all"?"active":""}" data-view="${esc(t)}" data-mode="all">All orders</button></div>${v==="all"?table(mine,false):byGroup(mine,t)}</div>`:""}</div>`}).join("")||`<div class="box empty">No orders match your filters.</div>`}
+function renderCustomers(){
+ $("custList").innerHTML=uniq(orders.map(o=>o.customer)).sort().map(c=>{
+  const g=orders.filter(o=>o.customer===c),ts=uniq(g.map(o=>o.tech)),k="c|"+c;
+  return `<div class="tech"><button class="techhead" data-open="${esc(k)}"><span><span class="techname">${esc(c)}</span><div class="techmeta">${g.length} order(s) · ${litres(g)} L</div></span><b>${open[k]?"−":"+"}</b></button>${open[k]?`<div class="techbody">${table(g,null)}</div>`:""}</div>`}).join("")}
+function renderReturns(){
+ $("returnRows").innerHTML=returns.map(r=>`<tr><td><b>${esc(r.id)}</b><div class="hint">Original ${esc(r.original)}</div></td><td>${esc(r.customer)}</td><td>${esc(r.tech)}</td><td>${esc(r.color)}</td><td>${esc(r.paint)}</td><td>${esc(r.reason)}</td><td>${r.cycle}</td><td>${badge(r.status)}</td><td>${r.status==="Returned"?`<button class="btn primary" data-rework="${esc(r.id)}">Assign and start rework</button>`:"Rework started"}</td></tr>`).join("")}
+function all(){render();renderCustomers();renderReturns()}
+document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+ if(d.tab){document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));["production","customers","returns"].forEach(s=>$(s).classList.toggle("hide",d.tab!==s))}
+ if(d.open){open[d.open]=!open[d.open];all()}
+ if(d.view){open["v|"+d.view]=d.mode;all()}
+ if(d.rework){const r=returns.find(x=>x.id===d.rework);r.status="In Progress";r.cycle++;if(r.tech==="Unassigned")r.tech="Dawit";
+  orders.push({id:113+orders.length-12,customer:r.customer,tech:r.tech,paint:r.paint,color:r.color,qty:"1.00 L",start:NOWS,status:"In Progress"});all()}});
+document.addEventListener("change",e=>{const t=e.target;
+ if(t.dataset.status){const o=orders.find(x=>x.id===Number(t.dataset.status));if(o){o.status=t.value;o.at=NOWS;if(["Done","Awaiting Pickup","Delivered"].includes(o.status)&&!o.mix)o.mix=NOWS;all()}}
+ if(["filterStatus","filterTech"].includes(t.id))all()});
+$("search").addEventListener("input",render);
+all();
+</script>
+</body></html>
